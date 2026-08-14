@@ -1,0 +1,23 @@
+schema: 1
+
+package: "@unabandoned/ret"
+
+upstream:
+  repo: fent/ret.js
+  reason: "unmaintained upstream — left idle while its dependency tree ages"
+
+summary: >-
+  Tokenizes a string representing a regular expression into a structured token
+  tree.
+
+why-forked: >-
+  An abandoned regex-tokenizer dependency of randexp; forked so Renovate keeps
+  its tree current for consumers.
+
+status: active
+
+used-by:
+  - consumer: "@unabandoned/randexp"
+    purpose: "Provides the regex token tree randexp walks to generate matches."
+
+tags: [regex, parser, tokenizer]
