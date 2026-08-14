@@ -1,4 +1,4 @@
-const vows = require('vows');
+const vows = require('./vows-adapter');
 const assert = require('assert');
 const ret = require('../dist');
 
