@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.2](https://github.com/unabandoned/ret.js/compare/ret-v0.5.1...ret-v0.5.2) (2026-08-18)
+
+
+### Dependencies & maintenance
+
+* add .unabandoned.yml dashboard metadata ([#3](https://github.com/unabandoned/ret.js/issues/3)) ([6d258d9](https://github.com/unabandoned/ret.js/commit/6d258d97c97939d09993c66983dfd3889d89a94b))
+* **deps:** update commitlint monorepo to v21.2.2 ([#9](https://github.com/unabandoned/ret.js/issues/9)) ([7a0e33a](https://github.com/unabandoned/ret.js/commit/7a0e33a3f84cc3669c7a1b5d39db3620214428a0))
+* **deps:** update unabandoned/.github action to v1.0.1 ([#10](https://github.com/unabandoned/ret.js/issues/10)) ([dcb1232](https://github.com/unabandoned/ret.js/commit/dcb1232bbf8d729190e763ca3eee8219f97d9a58))
+* **deps:** update unabandoned/.github digest to 88ce617 ([#5](https://github.com/unabandoned/ret.js/issues/5)) ([4d4f663](https://github.com/unabandoned/ret.js/commit/4d4f66333ad6a69e1b7cd3abba81dd686baa820b))
+* pin reusable workflows to the @unabandoned/.github v1.0.0 release ([#8](https://github.com/unabandoned/ret.js/issues/8)) ([3bbafdc](https://github.com/unabandoned/ret.js/commit/3bbafdcf52fa66e4de084cb36849cbc4bfc146d9))
+
 ## [0.5.1](https://github.com/unabandoned/ret.js/compare/ret-v0.5.0...ret-v0.5.1) (2026-08-14)
 
 
