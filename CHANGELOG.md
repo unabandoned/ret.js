@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.2](https://github.com/unabandoned/ret.js/compare/ret-v0.5.1...ret-v0.5.2) (2026-08-30)
+
+
+### Dependencies & maintenance
+
+* add .unabandoned.yml dashboard metadata ([#3](https://github.com/unabandoned/ret.js/issues/3)) ([6d258d9](https://github.com/unabandoned/ret.js/commit/6d258d97c97939d09993c66983dfd3889d89a94b))
+* **deps:** update commitlint monorepo to v21.2.2 ([#9](https://github.com/unabandoned/ret.js/issues/9)) ([7a0e33a](https://github.com/unabandoned/ret.js/commit/7a0e33a3f84cc3669c7a1b5d39db3620214428a0))
+* **deps:** update dependency @types/node to v26.3.0 ([#12](https://github.com/unabandoned/ret.js/issues/12)) ([75caafa](https://github.com/unabandoned/ret.js/commit/75caafa2ef0b352c25b48fd59696d88ccd67aafd))
+* **deps:** update dependency @types/node to v26.4.0 ([#14](https://github.com/unabandoned/ret.js/issues/14)) ([ede3845](https://github.com/unabandoned/ret.js/commit/ede384506c04c84bd0a589f3c9552706cb88954a))
+* **deps:** update unabandoned/.github action to v1.0.1 ([#10](https://github.com/unabandoned/ret.js/issues/10)) ([dcb1232](https://github.com/unabandoned/ret.js/commit/dcb1232bbf8d729190e763ca3eee8219f97d9a58))
+* **deps:** update unabandoned/.github action to v1.0.2 ([#11](https://github.com/unabandoned/ret.js/issues/11)) ([bbde29a](https://github.com/unabandoned/ret.js/commit/bbde29aec6293ccb8f2a99ed39ce184d214312a2))
+* **deps:** update unabandoned/.github action to v1.0.3 ([#13](https://github.com/unabandoned/ret.js/issues/13)) ([ab12d2f](https://github.com/unabandoned/ret.js/commit/ab12d2ff3d4bd4608cb17413bf411febf690995c))
+* **deps:** update unabandoned/.github digest to 88ce617 ([#5](https://github.com/unabandoned/ret.js/issues/5)) ([4d4f663](https://github.com/unabandoned/ret.js/commit/4d4f66333ad6a69e1b7cd3abba81dd686baa820b))
+* pin reusable workflows to the @unabandoned/.github v1.0.0 release ([#8](https://github.com/unabandoned/ret.js/issues/8)) ([3bbafdc](https://github.com/unabandoned/ret.js/commit/3bbafdcf52fa66e4de084cb36849cbc4bfc146d9))
+
 ## [0.5.1](https://github.com/unabandoned/ret.js/compare/ret-v0.5.0...ret-v0.5.1) (2026-08-14)
 
 
