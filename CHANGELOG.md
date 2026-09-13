@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.3](https://github.com/unabandoned/ret.js/compare/ret-v0.5.2...ret-v0.5.3) (2026-09-13)
+
+
+### Dependencies & maintenance
+
+* **deps:** update dependency @types/node to v26.4.1 ([#15](https://github.com/unabandoned/ret.js/issues/15)) ([c86e952](https://github.com/unabandoned/ret.js/commit/c86e95230201e865ef94d302c4ac0102931893ab))
+* **deps:** update dependency @types/node to v26.5.0 ([#17](https://github.com/unabandoned/ret.js/issues/17)) ([91f9084](https://github.com/unabandoned/ret.js/commit/91f908464b3be3151ac7ecbc98fb03c65eda3de8))
+* **deps:** update dependency @types/node to v26.5.1 ([#19](https://github.com/unabandoned/ret.js/issues/19)) ([73b5c89](https://github.com/unabandoned/ret.js/commit/73b5c89b00986fb02e444d18c925aadfbf50dcb8))
+* **deps:** update unabandoned/.github action to v1.0.4 ([#18](https://github.com/unabandoned/ret.js/issues/18)) ([a4ef487](https://github.com/unabandoned/ret.js/commit/a4ef487eebcfb8716d897b6fb22e3b7202e56e1a))
+
 ## [0.5.2](https://github.com/unabandoned/ret.js/compare/ret-v0.5.1...ret-v0.5.2) (2026-08-30)
 
 
