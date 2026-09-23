@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/unabandoned/ret.js/compare/ret-v0.5.3...ret-v0.5.4) (2026-09-23)
+
+
+### Bug Fixes
+
+* stop dev-only commits from cutting releases ([#26](https://github.com/unabandoned/ret.js/issues/26)) ([72473e4](https://github.com/unabandoned/ret.js/commit/72473e4ef6e9b0b7edf560f15a0d9abc42b1a38b))
+
 ## [0.5.3](https://github.com/unabandoned/ret.js/compare/ret-v0.5.2...ret-v0.5.3) (2026-09-22)
 
 
