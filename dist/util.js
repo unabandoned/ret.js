@@ -42,13 +42,26 @@ const CTRL = '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^ ?';
  * their respective characters.
  *
  * @param {string} str
+ * @param {number[]} sourceMap Optional mapping from decoded character positions to source positions
  * @returns {string}
  */
-const strToChars = (str) => {
+const strToChars = (str, sourceMap) => {
     const charsRegex = /(\[\\b\])|(\\)?\\(?:u([A-F0-9]{4})|x([A-F0-9]{2})|c([@A-Z[\\\]^?])|([0tnvfr]))/g;
-    return str.replace(charsRegex, (s, b, lbs, a16, b16, dctrl, eslsh) => {
+    let sourceIndex = 0;
+    const mapReplacement = (offset, source, replacement) => {
+        if (sourceMap) {
+            while (sourceIndex < offset)
+                sourceMap.push(sourceIndex++);
+            for (let index = 0; index < replacement.length; index++) {
+                sourceMap.push(offset + (source === replacement ? index : 0));
+            }
+            sourceIndex = offset + source.length;
+        }
+        return replacement;
+    };
+    const decoded = str.replace(charsRegex, (s, b, lbs, a16, b16, dctrl, eslsh, offset) => {
         if (lbs) {
-            return s;
+            return mapReplacement(offset, s, s);
         }
         let code = b ? 8 :
             a16 ? parseInt(a16, 16) :
@@ -63,8 +76,14 @@ const strToChars = (str) => {
                     }[eslsh];
         let c = String.fromCharCode(code);
         // Escape special regex characters.
-        return /[[\]{}^$.|?*+()]/.test(c) ? `\\${c}` : c;
+        const replacement = /[[\]{}^$.|?*+()]/.test(c) ? `\\${c}` : c;
+        return mapReplacement(offset, s, replacement);
     });
+    if (sourceMap) {
+        while (sourceIndex < str.length)
+            sourceMap.push(sourceIndex++);
+    }
+    return decoded;
 };
 exports.strToChars = strToChars;
 /**
@@ -75,7 +94,7 @@ exports.strToChars = strToChars;
  * @param {string} regexpStr
  * @returns {Array.<Array.<Object>, number>}
  */
-const tokenizeClass = (str, regexpStr) => {
+const tokenizeClass = (str, regexpStr = '') => {
     var _a, _b, _c, _d, _e, _f, _g;
     let tokens = [], rs, c;
     const regexp = /\\(?:(w)|(d)|(s)|(W)|(D)|(S))|((?:(?:\\)(.)|([^\]\\]))-(((?:\\)])|(((?:\\)?([^\]])))))|(\])|(?:\\)?([^])/g;

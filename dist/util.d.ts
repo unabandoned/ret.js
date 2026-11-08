@@ -4,9 +4,10 @@ import { SetTokens } from './types';
  * their respective characters.
  *
  * @param {string} str
+ * @param {number[]} sourceMap Optional mapping from decoded character positions to source positions
  * @returns {string}
  */
-export declare const strToChars: (str: string) => string;
+export declare const strToChars: (str: string, sourceMap?: number[]) => string;
 /**
  * Turns class into tokens
  * reads str until it encounters a ] not preceeded by a \
@@ -15,4 +16,4 @@ export declare const strToChars: (str: string) => string;
  * @param {string} regexpStr
  * @returns {Array.<Array.<Object>, number>}
  */
-export declare const tokenizeClass: (str: string, regexpStr: string) => [SetTokens, number];
+export declare const tokenizeClass: (str: string, regexpStr?: string) => [SetTokens, number];

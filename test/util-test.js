@@ -112,3 +112,23 @@ vows.describe('tokenizeClass')
     },
   })
   .export(module);
+
+
+// Ported from upstream 720c2ff8 (group modifier support), which records where
+// each decoded character came from so errors can report source columns.
+const { describe, it } = require('node:test');
+
+describe('strToChars source map', () => {
+  it('maps decoded characters back to their original source positions', () => {
+    const sourceMap = [];
+    assert.strictEqual(util.strToChars('a\\x69b\\u0028c', sourceMap), 'aib\\(c');
+    assert.deepStrictEqual(sourceMap, [0, 1, 5, 6, 6, 12]);
+  });
+
+  it('keeps source positions for escaped literals that are not decoded', () => {
+    const source = '\\\\u0069';
+    const sourceMap = [];
+    assert.strictEqual(util.strToChars(source, sourceMap), source);
+    assert.deepStrictEqual(sourceMap, Array.from(source, (_char, index) => index));
+  });
+});

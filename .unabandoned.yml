@@ -6,6 +6,75 @@ upstream:
   repo: fent/ret.js
   reason: "unmaintained upstream — left idle while its dependency tree ages"
 
+  # Upstream commits looked at, so the drift report stops re-reporting them and
+  # a genuinely new commit stands out.
+  reviewed:
+    - sha: 0609d0d0
+      decision: declined
+      note: >-
+        moves upstream's vows suite to mocha; this fork already runs that suite
+        on node:test through test/vows-adapter.js, with no test runner dependency
+    - sha: fcc7fae4
+      decision: declined
+      note: >-
+        rewrites the tests in TypeScript under ts-node and mocha with an eslint
+        config; this fork tests the built dist/ in plain JS on node:test
+    - sha: a7207c2b
+      decision: declined
+      note: >-
+        adds a tsconfig.build.json so upstream's TS tests stay out of dist/;
+        our tsconfig.json already sets rootDir ./lib and the tests are JS
+    - sha: 7fbd6e02
+      decision: ported
+      note: >-
+        type fixes: Range leaves the Token union for a new SetToken, reconstruct
+        accepts Range, tokenizeClass's regexpStr defaults to ''; applied
+        unchanged to lib/
+    - sha: c26bea58
+      decision: ported
+      note: >-
+        drops an empty-name check in the tokenizer that the first-character
+        check above it already makes unreachable; applied unchanged
+    - sha: 4b603034
+      decision: declined
+      note: >-
+        edits upstream's lint, nodejs and release workflows, none of which this
+        fork has, and swaps README badges for ones describing fent/ret.js
+    - sha: 749035a2
+      decision: declined
+      note: "adds permissions to upstream's lint.yml and nodejs.yml, workflows this fork does not have"
+    - sha: 2b53f4ec
+      decision: declined
+      note: >-
+        dependabot bump of nyc and upstream's package-lock; this fork carries
+        neither (.npmrc has package-lock=false)
+    - sha: "45242341"
+      decision: declined
+      note: "dependabot bump of mocha via serialize-javascript; this fork does not carry mocha"
+    - sha: 720c2ff8
+      decision: ported
+      note: >-
+        parses group modifiers such as (?im-s:a) into a non-capturing group
+        with a modifier object, and reconstructs them; lib/ and README apply
+        unchanged, modifier-test.ts is ported as test/modifier-test.js and the
+        strToChars source-map tests are appended to test/util-test.js
+    - sha: 2076ce01
+      decision: declined
+      note: "npm audit fix on upstream's package-lock; this fork carries none"
+    - sha: b38d6691
+      decision: ported
+      note: >-
+        rejects escaped characters used as group syntax, so (?\x3Da) is no
+        longer tokenized as the lookahead (?=a), and reports group errors at
+        source columns; lib/ applies unchanged, its tests are appended to
+        test/error-test.js and test/main-test.js
+    - sha: d8fc932f
+      decision: declined
+      note: >-
+        bumps eslint, typescript-eslint and @types/node and trims upstream's
+        tsconfig.json comments; this fork has no eslint, Renovate manages
+        @types/node, and the compiler options it keeps are ours already
+
 summary: >-
   Tokenizes a string representing a regular expression into a structured token
   tree.
