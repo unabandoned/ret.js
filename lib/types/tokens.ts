@@ -18,6 +18,11 @@ export type Group = Base<types.GROUP, {
   notFollowedBy?: boolean;
   lookBehind?: boolean;
   name?: string;
+  modifier?: {
+    ignoreCase: boolean | null;
+    multiline: boolean | null;
+    dotAll: boolean | null;
+  };
 }>
 
 export type Set = Base<types.SET, {
@@ -40,7 +45,8 @@ export type Position = ValueType<types.POSITION, '$' | '^' | 'b' | 'B'>
 export type Reference = ValueType<types.REFERENCE, number>
 export type Char = ValueType<types.CHAR, number>
 
-export type Token = Group | Position | Set | Range | Repetition | Reference | Char
-export type Tokens = Root | Token
+export type Token = Group | Position | Set | Repetition | Reference | Char;
+export type Tokens = Root | Token;
 
-export type SetTokens = (Range | Char | Set)[]
+export type SetToken = Range | Char | Set;
+export type SetTokens = SetToken[];

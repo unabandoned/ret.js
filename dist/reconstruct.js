@@ -37,12 +37,26 @@ const reconstruct = (token) => {
         case types_1.types.SET:
             return (0, write_set_tokens_1.writeSetTokens)(token);
         case types_1.types.GROUP: {
-            // Check token.remember
+            let modifier = '';
+            if (token.modifier) {
+                const properties = ['ignoreCase', 'multiline', 'dotAll'];
+                let enabled = '';
+                let disabled = '';
+                properties.forEach((property, index) => {
+                    if (token.modifier[property] === true) {
+                        enabled += 'ims'[index];
+                    }
+                    else if (token.modifier[property] === false) {
+                        disabled += 'ims'[index];
+                    }
+                });
+                modifier = enabled + (disabled ? `-${disabled}` : '');
+            }
             const prefix = token.name ? `?<${token.name}>` :
                 token.remember ? '' :
                     token.followedBy ? '?=' :
                         token.notFollowedBy ? '?!' :
-                            '?:';
+                            modifier ? `?${modifier}:` : '?:';
             return `(${prefix}${createAlternate(token)})`;
         }
         case types_1.types.REPETITION: {

@@ -1021,3 +1021,27 @@ vows.describe('Regexp Tokenizer')
     },
   })
   .export(module);
+
+
+// Ported from upstream b38d6691 (reject escaped characters in group syntax).
+const { describe, it } = require('node:test');
+
+describe('Regexp Tokenizer groups written with escapes', () => {
+  describe('with a name written with unicode escapes', () => {
+    it('Decodes the name', () => {
+      const t = ret('(?<\\u0061\\u0062>c)');
+      assert.deepEqual(t.stack, [{ type: types.GROUP, remember: true, name: 'ab', stack: [char('c')] }]);
+    });
+    it('Closes the name at a unicode-escaped >, as JavaScript engines do', () => {
+      const t = ret('(?<n\\u003E>a)');
+      assert.deepEqual(t.stack, [{ type: types.GROUP, remember: true, name: 'n', stack: charStr('>a') }]);
+    });
+  });
+
+  describe('with an escaped character in the body', () => {
+    it('Decodes it as text', () => {
+      const t = ret('(?=\\x3D)');
+      assert.deepEqual(t.stack, [{ type: types.GROUP, remember: false, followedBy: true, stack: [char('=')] }]);
+    });
+  });
+});

@@ -45,6 +45,12 @@ const captureGroupFirstChar = /^[a-zA-Z_$]$/i;
  * Valid characters for capture group names.
  */
 const captureGroupChars = /^[a-zA-Z0-9_$]$/i;
+const modifierProperties = {
+    i: 'ignoreCase',
+    m: 'multiline',
+    s: 'dotAll',
+};
+const isModifier = (flag) => Object.prototype.hasOwnProperty.call(modifierProperties, flag);
 const digit = /\d/;
 /**
  * Tokenizes a regular expression (that is currently a string)
@@ -64,8 +70,63 @@ const tokenizer = (regexpStr) => {
     const repeatErr = (col) => {
         throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Nothing to repeat at column ${col - 1}`);
     };
+    const modifierErr = (message, index) => {
+        var _a;
+        const column = (_a = sourceMap[index]) !== null && _a !== void 0 ? _a : regexpStr.length;
+        throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: ${message} at column ${column}`);
+    };
+    // Syntax characters must be written literally, even though escapes in the body are decoded.
+    const isLiteral = (index) => regexpStr[sourceMap[index]] === str[index];
+    // Group names may also use `\u` escapes, but no other escape.
+    const isLiteralOrUnicodeEscape = (index) => isLiteral(index) || regexpStr.startsWith('\\u', sourceMap[index]);
+    const isNameChar = (pattern, index) => pattern.test(str[index]) && isLiteralOrUnicodeEscape(index);
+    // Group name errors report the character as written, at its 1-based column in the source.
+    const sourceChar = (index) => regexpStr[sourceMap[index]];
+    const sourceColumn = (index) => { var _a; return ((_a = sourceMap[index]) !== null && _a !== void 0 ? _a : regexpStr.length) + 1; };
+    const tokenizeModifiers = (group, index) => {
+        const modifier = {
+            ignoreCase: null,
+            multiline: null,
+            dotAll: null,
+        };
+        let enable = true;
+        let hasFlag = false;
+        while (index < str.length) {
+            const flag = str[index];
+            if (!isLiteral(index))
+                break;
+            if (isModifier(flag)) {
+                const property = modifierProperties[flag];
+                if (modifier[property] !== null) {
+                    modifierErr('Repeated flag in flag group', index);
+                }
+                modifier[property] = enable;
+                hasFlag = true;
+            }
+            else if (flag === '-') {
+                if (!enable) {
+                    modifierErr('Multiple dashes in flag group', index);
+                }
+                enable = false;
+            }
+            else {
+                break;
+            }
+            index++;
+        }
+        if (!hasFlag && str[index] === ':' && isLiteral(index)) {
+            modifierErr('Invalid flag group', index);
+        }
+        if (str[index] !== ':' || !isLiteral(index)) {
+            modifierErr('Invalid group', index);
+        }
+        group.modifier = modifier;
+        group.remember = false;
+        return index + 1;
+    };
     // Decode a few escaped characters.
-    let str = util.strToChars(regexpStr);
+    const sourceMap = [];
+    let str = util.strToChars(regexpStr, sourceMap);
     // Iterate through each character in string.
     while (i < str.length) {
         switch (c = str[i++]) {
@@ -161,6 +222,11 @@ const tokenizer = (regexpStr) => {
                 };
                 // If this is a special kind of group.
                 if (str[i] === '?') {
+                    // A `\` here is never group syntax. It also catches decoded special characters such as
+                    // `\x28`, which become `\(` with the `\` mapped back to the escape's own `\`.
+                    if (!isLiteral(i + 1) || str[i + 1] === '\\') {
+                        modifierErr('Invalid group', i + 1);
+                    }
                     c = str[i + 1];
                     i += 2;
                     // Match if followed by.
@@ -175,25 +241,22 @@ const tokenizer = (regexpStr) => {
                     }
                     else if (c === '<') {
                         let name = '';
-                        if (captureGroupFirstChar.test(str[i])) {
+                        if (isNameChar(captureGroupFirstChar, i)) {
                             name += str[i];
                             i++;
                         }
                         else {
-                            throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Invalid capture group name, character '${str[i]}'` +
-                                ` after '<' at column ${i + 1}`);
+                            throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Invalid capture group name, character '${sourceChar(i)}'` +
+                                ` after '<' at column ${sourceColumn(i)}`);
                         }
-                        while (i < str.length && captureGroupChars.test(str[i])) {
+                        while (i < str.length && isNameChar(captureGroupChars, i)) {
                             name += str[i];
                             i++;
                         }
-                        if (!name) {
-                            throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Invalid capture group name, character '${str[i]}'` +
-                                ` after '<' at column ${i + 1}`);
-                        }
-                        if (str[i] !== '>') {
+                        // The spec requires a literal `>`, but JavaScript engines also accept a `\u` escape here.
+                        if (str[i] !== '>' || !isLiteralOrUnicodeEscape(i)) {
                             throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Unclosed capture group name, expected '>', found` +
-                                ` '${str[i]}' at column ${i + 1}`);
+                                ` '${sourceChar(i)}' at column ${sourceColumn(i)}`);
                         }
                         group.name = name;
                         i++;
@@ -201,9 +264,11 @@ const tokenizer = (regexpStr) => {
                     else if (c === ':') {
                         group.remember = false;
                     }
+                    else if (isModifier(c) || c === '-') {
+                        i = tokenizeModifiers(group, i - 1);
+                    }
                     else {
-                        throw new SyntaxError(`Invalid regular expression: /${regexpStr}/: Invalid group, character '${c}'` +
-                            ` after '?' at column ${i - 1}`);
+                        modifierErr(`Invalid group, character '${c}' after '?'`, i - 1);
                     }
                 }
                 else {

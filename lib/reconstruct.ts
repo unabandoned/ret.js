@@ -1,4 +1,4 @@
-import { types, Root, Token, Tokens, Group } from './types';
+import { types, Root, Token, Tokens, Group, Range } from './types';
 import { writeSetTokens, setChar } from './write-set-tokens';
 
 const reduceStack = (stack: Token[]): string => stack.map(reconstruct).join('');
@@ -13,7 +13,7 @@ const createAlternate = (token: Root | Group): string => {
   }
 };
 
-export const reconstruct = (token: Tokens): string => {
+export const reconstruct = (token: Tokens | Range): string => {
   switch (token.type) {
     case types.ROOT:
       return createAlternate(token);
@@ -34,13 +34,26 @@ export const reconstruct = (token: Tokens): string => {
     case types.SET:
       return writeSetTokens(token);
     case types.GROUP: {
-      // Check token.remember
+      let modifier = '';
+      if (token.modifier) {
+        const properties = ['ignoreCase', 'multiline', 'dotAll'] as const;
+        let enabled = '';
+        let disabled = '';
+        properties.forEach((property, index) => {
+          if (token.modifier[property] === true) {
+            enabled += 'ims'[index];
+          } else if (token.modifier[property] === false) {
+            disabled += 'ims'[index];
+          }
+        });
+        modifier = enabled + (disabled ? `-${disabled}` : '');
+      }
       const prefix =
         token.name ? `?<${token.name}>` :
           token.remember ? '' :
             token.followedBy ? '?=' :
               token.notFollowedBy ? '?!' :
-                '?:';
+                modifier ? `?${modifier}:` : '?:';
       return `(${prefix}${createAlternate(token)})`;
     }
     case types.REPETITION: {
