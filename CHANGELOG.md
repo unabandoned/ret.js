@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/unabandoned/ret.js/compare/ret-v0.5.4...ret-v0.5.5) (2026-11-09)
+
+
+### Features
+
+* parse group modifiers and reject escaped group syntax ([#42](https://github.com/unabandoned/ret.js/issues/42)) ([533c75a](https://github.com/unabandoned/ret.js/commit/533c75a3c40eb9391e87efc250386d7b8ef6b889))
+
 ## [0.5.4](https://github.com/unabandoned/ret.js/compare/ret-v0.5.3...ret-v0.5.4) (2026-09-23)
 
 
